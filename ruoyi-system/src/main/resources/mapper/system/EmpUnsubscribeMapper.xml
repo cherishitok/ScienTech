@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.EmpUnsubscribeMapper">
+    
+    <resultMap type="EmpUnsubscribe" id="EmpUnsubscribeResult">
+        <result property="unsubId"    column="unsub_id"    />
+        <result property="mdn"    column="mdn"    />
+        <result property="packageId"    column="package_id"    />
+        <result property="resCode"    column="res_code"    />
+        <result property="resMessage"    column="res_message"    />
+        <result property="unsubCreateTime"    column="unsub_create_time"    />
+    </resultMap>
+
+    <sql id="selectEmpUnsubscribeVo">
+        select unsub_id, mdn, package_id, res_code, res_message, unsub_create_time from emp_unsubscribe
+        ORDER BY unsub_create_time DESC
+    </sql>
+
+    <sql id="selectEmpUnsubscribeVo1">
+        select unsub_id, mdn, package_id, res_code, res_message, unsub_create_time from emp_unsubscribe
+    </sql>
+
+    <select id="selectEmpUnsubscribeList" parameterType="EmpUnsubscribe" resultMap="EmpUnsubscribeResult">
+        <include refid="selectEmpUnsubscribeVo1"/>
+        <where>
+            <if test="mdn != null  and mdn != ''"> and mdn = #{mdn}</if>
+            <if test="packageId != null  and packageId != ''"> and package_id = #{packageId}</if>
+            <if test="resCode != null  and resCode != ''"> and res_code = #{resCode}</if>
+            <if test="params.beginUnsubCreateTime != null  and params.beginUnsubCreateTime != ''"> and date_format(unsub_create_time,'%y%m%d') &gt;= date_format(#{params.beginUnsubCreateTime},'%y%m%d')</if>
+            <if test="params.endUnsubCreateTime != null  and params.endUnsubCreateTime != ''"> and date_format(unsub_create_time,'%y%m%d') &lt;= date_format(#{params.endUnsubCreateTime},'%y%m%d')</if>
+        </where>
+        ORDER BY unsub_create_time DESC
+    </select>
+    
+    <select id="selectEmpUnsubscribeById" parameterType="Long" resultMap="EmpUnsubscribeResult">
+        <include refid="selectEmpUnsubscribeVo1"/>
+        where unsub_id = #{unsubId}
+    </select>
+        
+    <insert id="insertEmpUnsubscribe" parameterType="EmpUnsubscribe" useGeneratedKeys="true" keyProperty="unsubId">
+        insert into emp_unsubscribe
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mdn != null  and mdn != ''">mdn,</if>
+            <if test="packageId != null  and packageId != ''">package_id,</if>
+            <if test="resCode != null  and resCode != ''">res_code,</if>
+            <if test="resMessage != null  and resMessage != ''">res_message,</if>
+            <if test="unsubCreateTime != null ">unsub_create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mdn != null  and mdn != ''">#{mdn},</if>
+            <if test="packageId != null  and packageId != ''">#{packageId},</if>
+            <if test="resCode != null  and resCode != ''">#{resCode},</if>
+            <if test="resMessage != null  and resMessage != ''">#{resMessage},</if>
+            <if test="unsubCreateTime != null ">#{unsubCreateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEmpUnsubscribe" parameterType="EmpUnsubscribe">
+        update emp_unsubscribe
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mdn != null  and mdn != ''">mdn = #{mdn},</if>
+            <if test="packageId != null  and packageId != ''">package_id = #{packageId},</if>
+            <if test="resCode != null  and resCode != ''">res_code = #{resCode},</if>
+            <if test="resMessage != null  and resMessage != ''">res_message = #{resMessage},</if>
+            <if test="unsubCreateTime != null ">unsub_create_time = #{unsubCreateTime},</if>
+        </trim>
+        where unsub_id = #{unsubId}
+    </update>
+
+    <delete id="deleteEmpUnsubscribeById" parameterType="Long">
+        delete from emp_unsubscribe where unsub_id = #{unsubId}
+    </delete>
+
+    <delete id="deleteEmpUnsubscribeByIds" parameterType="String">
+        delete from emp_unsubscribe where unsub_id in 
+        <foreach item="unsubId" collection="array" open="(" separator="," close=")">
+            #{unsubId}
+        </foreach>
+    </delete>
+    
+</mapper>

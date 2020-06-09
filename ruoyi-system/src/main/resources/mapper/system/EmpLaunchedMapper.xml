@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.EmpLaunchedMapper">
+    
+    <resultMap type="EmpLaunched" id="EmpLaunchedResult">
+        <result property="lauId"    column="lau_id"    />
+        <result property="mdn"    column="mdn"    />
+        <result property="packageId"    column="package_id"    />
+        <result property="lauColumn"    column="lau_column"    />
+        <result property="imsi"    column="imsi"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="lauCreateTime"    column="lau_create_time"    />
+        <result property="resCode"    column="res_code"    />
+        <result property="resMessage"    column="res_message"    />
+        <result property="feeType"    column="fee_type"    />
+        <result property="resCreateTime"    column="res_create_time"    />
+    </resultMap>
+
+    <sql id="selectEmpLaunchedVo">
+        select lau_id, mdn, package_id, lau_column, imsi, device_no, lau_create_time, res_code, res_message, fee_type, res_create_time from emp_launched
+        ORDER BY lau_create_time DESC
+    </sql>
+
+    <sql id="selectEmpLaunchedVo1">
+        select lau_id, mdn, package_id, lau_column, imsi, device_no, lau_create_time, res_code, res_message, fee_type, res_create_time from emp_launched
+    </sql>
+
+    <select id="selectEmpLaunchedList" parameterType="EmpLaunched" resultMap="EmpLaunchedResult">
+        <include refid="selectEmpLaunchedVo1"/>
+        <where>
+            <if test="mdn != null  and mdn != ''"> and mdn = #{mdn}</if>
+            <if test="packageId != null  and packageId != ''"> and package_id = #{packageId}</if>
+            <if test="imsi != null  and imsi != ''"> and imsi = #{imsi}</if>
+            <if test="deviceNo != null  and deviceNo != ''"> and device_no = #{deviceNo}</if>
+            <if test="params.beginLauCreateTime != null and params.beginLauCreateTime != '' "> and date_format(lau_create_time,'%y%m%d') &gt;= date_format(#{params.beginLauCreateTime},'%y%m%d')</if>
+            <if test="params.endLauCreateTime != null and params.endLauCreateTime != '' "> and date_format(lau_create_time,'%y%m%d') &lt;= date_format(#{params.endLauCreateTime},'%y%m%d')</if>
+            <if test="resCode != null  and resCode != ''"> and res_code = #{resCode}</if>
+            <if test="feeType != null  and feeType != ''"> and fee_type = #{feeType}</if>
+            <if test="resCreateTime != null "> and res_create_time = #{resCreateTime}</if>
+        </where>
+        ORDER BY lau_create_time DESC
+
+    </select>
+    
+    <select id="selectEmpLaunchedById" parameterType="Long" resultMap="EmpLaunchedResult">
+        <include refid="selectEmpLaunchedVo1"/>
+        where lau_id = #{lauId}
+    </select>
+        
+    <insert id="insertEmpLaunched" parameterType="EmpLaunched" useGeneratedKeys="true" keyProperty="lauId">
+        insert into emp_launched
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mdn != null  and mdn != ''">mdn,</if>
+            <if test="packageId != null  and packageId != ''">package_id,</if>
+            <if test="lauColumn != null  and lauColumn != ''">lau_column,</if>
+            <if test="imsi != null  and imsi != ''">imsi,</if>
+            <if test="deviceNo != null  and deviceNo != ''">device_no,</if>
+            <if test="lauCreateTime != null ">lau_create_time,</if>
+            <if test="resCode != null  and resCode != ''">res_code,</if>
+            <if test="resMessage != null  and resMessage != ''">res_message,</if>
+            <if test="feeType != null  and feeType != ''">fee_type,</if>
+            <if test="resCreateTime != null ">res_create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mdn != null  and mdn != ''">#{mdn},</if>
+            <if test="packageId != null  and packageId != ''">#{packageId},</if>
+            <if test="lauColumn != null  and lauColumn != ''">#{lauColumn},</if>
+            <if test="imsi != null  and imsi != ''">#{imsi},</if>
+            <if test="deviceNo != null  and deviceNo != ''">#{deviceNo},</if>
+            <if test="lauCreateTime != null ">#{lauCreateTime},</if>
+            <if test="resCode != null  and resCode != ''">#{resCode},</if>
+            <if test="resMessage != null  and resMessage != ''">#{resMessage},</if>
+            <if test="feeType != null  and feeType != ''">#{feeType},</if>
+            <if test="resCreateTime != null ">#{resCreateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEmpLaunched" parameterType="EmpLaunched">
+        update emp_launched
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mdn != null  and mdn != ''">mdn = #{mdn},</if>
+            <if test="packageId != null  and packageId != ''">package_id = #{packageId},</if>
+            <if test="lauColumn != null  and lauColumn != ''">lau_column = #{lauColumn},</if>
+            <if test="imsi != null  and imsi != ''">imsi = #{imsi},</if>
+            <if test="deviceNo != null  and deviceNo != ''">device_no = #{deviceNo},</if>
+            <if test="lauCreateTime != null ">lau_create_time = #{lauCreateTime},</if>
+            <if test="resCode != null  and resCode != ''">res_code = #{resCode},</if>
+            <if test="resMessage != null  and resMessage != ''">res_message = #{resMessage},</if>
+            <if test="feeType != null  and feeType != ''">fee_type = #{feeType},</if>
+            <if test="resCreateTime != null ">res_create_time = #{resCreateTime},</if>
+        </trim>
+        where lau_id = #{lauId}
+    </update>
+
+    <delete id="deleteEmpLaunchedById" parameterType="Long">
+        delete from emp_launched where lau_id = #{lauId}
+    </delete>
+
+    <delete id="deleteEmpLaunchedByIds" parameterType="String">
+        delete from emp_launched where lau_id in 
+        <foreach item="lauId" collection="array" open="(" separator="," close=")">
+            #{lauId}
+        </foreach>
+    </delete>
+    
+</mapper>

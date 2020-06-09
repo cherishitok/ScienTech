@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.EmpQuerypackageMapper">
+    
+    <resultMap type="EmpQuerypackage" id="EmpQuerypackageResult">
+        <result property="queId"    column="que_id"    />
+        <result property="mdn"    column="mdn"    />
+        <result property="packageId"    column="package_id"    />
+        <result property="isCountDownNum"    column="is_count_down_num"    />
+        <result property="queCreateTime"    column="que_create_time"    />
+        <result property="resCode"    column="res_code"    />
+        <result property="resMessage"    column="res_message"    />
+        <result property="resMdn"    column="res_mdn"    />
+        <result property="resPackageId"    column="res_package_id"    />
+        <result property="status"    column="status"    />
+        <result property="countDownNum"    column="count_down_num"    />
+        <result property="orderTime"    column="order_time"    />
+        <result property="validTime"    column="valid_time"    />
+        <result property="unsubscribeTime"    column="unsubscribe_time"    />
+        <result property="userPackageList"    column="user_package_list"    />
+    </resultMap>
+
+    <sql id="selectEmpQuerypackageVo">
+        select que_id, mdn, package_id, is_count_down_num, que_create_time, res_code, res_message, res_mdn, res_package_id, status, count_down_num, order_time, valid_time, unsubscribe_time, user_package_list from emp_querypackage
+    </sql>
+
+    <sql id="selectEmpQuerypackageVo1">
+        select que_id, mdn, package_id, is_count_down_num, que_create_time, res_code, res_message, res_mdn, res_package_id, status, count_down_num, order_time, valid_time, unsubscribe_time, user_package_list from emp_querypackage
+        ORDER BY que_create_time DESC
+    </sql>
+
+    <select id="selectEmpQuerypackageList" parameterType="EmpQuerypackage" resultMap="EmpQuerypackageResult">
+        <include refid="selectEmpQuerypackageVo"/>
+        <where>  
+            <if test="mdn != null  and mdn != ''"> and mdn = #{mdn}</if>
+            <if test="packageId != null  and packageId != ''"> and package_id = #{packageId}</if>
+            <if test="resCode != null  and resCode != ''"> and res_code = #{resCode}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        ORDER BY que_create_time DESC
+    </select>
+    
+    <select id="selectEmpQuerypackageById" parameterType="Long" resultMap="EmpQuerypackageResult">
+        <include refid="selectEmpQuerypackageVo"/>
+        where que_id = #{queId}
+    </select>
+        
+    <insert id="insertEmpQuerypackage" parameterType="EmpQuerypackage" useGeneratedKeys="true" keyProperty="queId">
+        insert into emp_querypackage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mdn != null  and mdn != ''">mdn,</if>
+            <if test="packageId != null  and packageId != ''">package_id,</if>
+            <if test="isCountDownNum != null  and isCountDownNum != ''">is_count_down_num,</if>
+            <if test="queCreateTime != null ">que_create_time,</if>
+            <if test="resCode != null  and resCode != ''">res_code,</if>
+            <if test="resMessage != null  and resMessage != ''">res_message,</if>
+            <if test="resMdn != null  and resMdn != ''">res_mdn,</if>
+            <if test="resPackageId != null  and resPackageId != ''">res_package_id,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="countDownNum != null  and countDownNum != ''">count_down_num,</if>
+            <if test="orderTime != null ">order_time,</if>
+            <if test="validTime != null ">valid_time,</if>
+            <if test="unsubscribeTime != null ">unsubscribe_time,</if>
+            <if test="userPackageList != null  and userPackageList != ''">user_package_list,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mdn != null  and mdn != ''">#{mdn},</if>
+            <if test="packageId != null  and packageId != ''">#{packageId},</if>
+            <if test="isCountDownNum != null  and isCountDownNum != ''">#{isCountDownNum},</if>
+            <if test="queCreateTime != null ">#{queCreateTime},</if>
+            <if test="resCode != null  and resCode != ''">#{resCode},</if>
+            <if test="resMessage != null  and resMessage != ''">#{resMessage},</if>
+            <if test="resMdn != null  and resMdn != ''">#{resMdn},</if>
+            <if test="resPackageId != null  and resPackageId != ''">#{resPackageId},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="countDownNum != null  and countDownNum != ''">#{countDownNum},</if>
+            <if test="orderTime != null ">#{orderTime},</if>
+            <if test="validTime != null ">#{validTime},</if>
+            <if test="unsubscribeTime != null ">#{unsubscribeTime},</if>
+            <if test="userPackageList != null  and userPackageList != ''">#{userPackageList},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEmpQuerypackage" parameterType="EmpQuerypackage">
+        update emp_querypackage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mdn != null  and mdn != ''">mdn = #{mdn},</if>
+            <if test="packageId != null  and packageId != ''">package_id = #{packageId},</if>
+            <if test="isCountDownNum != null  and isCountDownNum != ''">is_count_down_num = #{isCountDownNum},</if>
+            <if test="queCreateTime != null ">que_create_time = #{queCreateTime},</if>
+            <if test="resCode != null  and resCode != ''">res_code = #{resCode},</if>
+            <if test="resMessage != null  and resMessage != ''">res_message = #{resMessage},</if>
+            <if test="resMdn != null  and resMdn != ''">res_mdn = #{resMdn},</if>
+            <if test="resPackageId != null  and resPackageId != ''">res_package_id = #{resPackageId},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="countDownNum != null  and countDownNum != ''">count_down_num = #{countDownNum},</if>
+            <if test="orderTime != null ">order_time = #{orderTime},</if>
+            <if test="validTime != null ">valid_time = #{validTime},</if>
+            <if test="unsubscribeTime != null ">unsubscribe_time = #{unsubscribeTime},</if>
+            <if test="userPackageList != null  and userPackageList != ''">user_package_list = #{userPackageList},</if>
+        </trim>
+        where que_id = #{queId}
+    </update>
+
+    <delete id="deleteEmpQuerypackageById" parameterType="Long">
+        delete from emp_querypackage where que_id = #{queId}
+    </delete>
+
+    <delete id="deleteEmpQuerypackageByIds" parameterType="String">
+        delete from emp_querypackage where que_id in 
+        <foreach item="queId" collection="array" open="(" separator="," close=")">
+            #{queId}
+        </foreach>
+    </delete>
+    
+</mapper>

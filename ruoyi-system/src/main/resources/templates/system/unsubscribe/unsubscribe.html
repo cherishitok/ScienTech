@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('爱音乐退订列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <label>手机号码：</label>
+                            <input type="text" id="unMdn" name="unMdn"/>
+                        </li>
+                        <li>
+                            <label>套餐id：</label>
+                            <input type="text" id="unPackageId" name="unPackageId"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="unsubscribeSubmit()"><i class="fa fa-send"></i>&nbsp;退订</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>手机号码：</label>
+                                <input type="text" name="mdn"/>
+                            </li>
+                            <li>
+                                <label>套餐id：</label>
+                                <input type="text" name="packageId"/>
+                            </li>
+                            <li>
+                                <label>结果代码：</label>
+                                <input type="text" name="resCode"/>
+                            </li>
+                            <li class="select-time">
+                                <label>退订时间：</label>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginUnsubCreateTime]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endUnsubCreateTime]"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:unsubscribe:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:unsubscribe:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:unsubscribe:remove')}]];
+        var prefix = ctx + "system/unsubscribe";
+        var prefix2 = ctx + "aimusic/services";
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "爱音乐退订",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'unsubId', 
+                    title: '退订id',
+                    visible: false
+                },
+                {
+                    field: 'mdn', 
+                    title: '手机号码'
+                },
+                {
+                    field: 'packageId', 
+                    title: '套餐id'
+                },
+                {
+                    field: 'resCode', 
+                    title: '结果代码'
+                },
+                {
+                    field: 'resMessage', 
+                    title: '结果描述'
+                },
+                {
+                    field: 'unsubCreateTime', 
+                    title: '退订时间'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+
+        function unsubscribeSubmit(){
+            var unMdn =$('#unMdn').val();
+            var unPackageId = $('#unPackageId').val();
+            if(unMdn == "" || unPackageId == ""){
+                $.modal.msg("手机号或套餐ID为空");
+                return;
+            }
+            $.ajax({
+                url: prefix2 + "/empunsubscribe",
+                data:{
+                    mdn : unMdn,
+                    package_id : unPackageId
+                },
+                type: "post",
+                success: function(result) {
+                    $('#unMdn').val("");
+                    $('#unPackageId').val("");
+                }
+            })
+        }
+    </script>
+</body>
+</html>

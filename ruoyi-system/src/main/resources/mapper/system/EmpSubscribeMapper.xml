@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.EmpSubscribeMapper">
+    
+    <resultMap type="EmpSubscribe" id="EmpSubscribeResult">
+        <result property="subId"    column="sub_id"    />
+        <result property="mdn"    column="mdn"    />
+        <result property="packageId"    column="package_id"    />
+        <result property="randomKey"    column="random_key"    />
+        <result property="subColumn"    column="sub_column"    />
+        <result property="subCreateTime"    column="sub_create_time"    />
+        <result property="resCode"    column="res_code"    />
+        <result property="resMessage"    column="res_message"    />
+        <result property="resCreateTime"    column="res_create_time"    />
+    </resultMap>
+
+    <sql id="selectEmpSubscribeVo">
+        select sub_id, mdn, package_id, random_key, sub_column, sub_create_time, res_code, res_message, res_create_time from emp_subscribe
+        ORDER BY sub_create_time DESC
+    </sql>
+
+    <sql id="selectEmpSubscribeVo1">
+        select sub_id, mdn, package_id, random_key, sub_column, sub_create_time, res_code, res_message, res_create_time from emp_subscribe
+    </sql>
+
+    <select id="selectEmpSubscribeList" parameterType="EmpSubscribe" resultMap="EmpSubscribeResult">
+        <include refid="selectEmpSubscribeVo1"/>
+        <where>
+            <if test="mdn != null  and mdn != ''"> and mdn = #{mdn}</if>
+            <if test="packageId != null  and packageId != ''"> and package_id = #{packageId}</if>
+            <if test="randomKey != null  and randomKey != ''"> and random_key = #{randomKey}</if>
+            <if test="subColumn != null  and subColumn != ''"> and sub_column = #{subColumn}</if>
+            <if test="params.beginSubCreateTime != null  and params.beginSubCreateTime != ''"> and date_format(sub_create_time,'%y%m%d') &gt;= date_format(#{params.beginSubCreateTime},'%y%m%d')</if>
+            <if test="params.endSubCreateTime != null  and params.endSubCreateTime != ''"> and date_format(sub_create_time,'%y%m%d') &lt;= date_format(#{params.endSubCreateTime},'%y%m%d')</if>
+            <if test="resCode != null  and resCode != ''"> and res_code = #{resCode}</if>
+            <if test="resMessage != null  and resMessage != ''"> and res_message = #{resMessage}</if>
+        </where>
+        ORDER BY sub_create_time DESC
+
+    </select>
+    
+    <select id="selectEmpSubscribeById" parameterType="Long" resultMap="EmpSubscribeResult">
+        <include refid="selectEmpSubscribeVo1"/>
+        where sub_id = #{subId}
+    </select>
+        
+    <insert id="insertEmpSubscribe" parameterType="EmpSubscribe" useGeneratedKeys="true" keyProperty="subId">
+        insert into emp_subscribe
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mdn != null  and mdn != ''">mdn,</if>
+            <if test="packageId != null  and packageId != ''">package_id,</if>
+            <if test="randomKey != null  and randomKey != ''">random_key,</if>
+            <if test="subColumn != null  and subColumn != ''">sub_column,</if>
+            <if test="subCreateTime != null ">sub_create_time,</if>
+            <if test="resCode != null  and resCode != ''">res_code,</if>
+            <if test="resMessage != null  and resMessage != ''">res_message,</if>
+            <if test="resCreateTime != null ">res_create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mdn != null  and mdn != ''">#{mdn},</if>
+            <if test="packageId != null  and packageId != ''">#{packageId},</if>
+            <if test="randomKey != null  and randomKey != ''">#{randomKey},</if>
+            <if test="subColumn != null  and subColumn != ''">#{subColumn},</if>
+            <if test="subCreateTime != null ">#{subCreateTime},</if>
+            <if test="resCode != null  and resCode != ''">#{resCode},</if>
+            <if test="resMessage != null  and resMessage != ''">#{resMessage},</if>
+            <if test="resCreateTime != null ">#{resCreateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEmpSubscribe" parameterType="EmpSubscribe">
+        update emp_subscribe
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mdn != null  and mdn != ''">mdn = #{mdn},</if>
+            <if test="packageId != null  and packageId != ''">package_id = #{packageId},</if>
+            <if test="randomKey != null  and randomKey != ''">random_key = #{randomKey},</if>
+            <if test="subColumn != null  and subColumn != ''">sub_column = #{subColumn},</if>
+            <if test="subCreateTime != null ">sub_create_time = #{subCreateTime},</if>
+            <if test="resCode != null  and resCode != ''">res_code = #{resCode},</if>
+            <if test="resMessage != null  and resMessage != ''">res_message = #{resMessage},</if>
+            <if test="resCreateTime != null ">res_create_time = #{resCreateTime},</if>
+        </trim>
+        where sub_id = #{subId}
+    </update>
+
+    <delete id="deleteEmpSubscribeById" parameterType="Long">
+        delete from emp_subscribe where sub_id = #{subId}
+    </delete>
+
+    <delete id="deleteEmpSubscribeByIds" parameterType="String">
+        delete from emp_subscribe where sub_id in 
+        <foreach item="subId" collection="array" open="(" separator="," close=")">
+            #{subId}
+        </foreach>
+    </delete>
+    
+</mapper>
